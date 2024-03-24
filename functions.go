@@ -62,10 +62,10 @@ func kill(cmd *exec.Cmd) error {
 	return nil
 }
 
-func loadPeople(url string) (People, error) {
+func loadPeople() (People, error) {
 	var people People
 
-	response, err := http.Get("https://github.com/4rkal/dmvp2p/people.json")
+	response, err := http.Get("https://raw.githubusercontent.com/4rkal/dmvp2p/main/people.json")
 	if err != nil {
 		return people, fmt.Errorf("failed to fetch data from URL: %w", err)
 	}
