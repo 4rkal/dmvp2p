@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"net/url"
 
 	"fyne.io/fyne/v2"
@@ -23,9 +24,21 @@ type UsersData struct {
 }
 
 func LoadUsers() []User {
-	fileContent, err := ioutil.ReadFile("helpers/users.json")
+	url := "https://raw.githubusercontent.com/4rkal/dmvp2p/refs/heads/main/helpers/users.json"
+
+	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatalf("Error reading file: %v", err)
+		log.Fatalf("Error fetching data: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		log.Fatalf("Error: received status code %d", resp.StatusCode)
+	}
+
+	fileContent, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Error reading response body: %v", err)
 	}
 
 	var data UsersData
