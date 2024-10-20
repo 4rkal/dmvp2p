@@ -1,0 +1,53 @@
+{
+    "users": [
+      {
+        "name": "4rkal",
+        "github": "4rkal",
+        "x": "4rkal_",
+        "website": "https://4rkal.com",
+        "address": "",
+        "description": "I like Monero monero"
+      },
+      {
+        "name": "user",
+        "github": "user",
+        "x": "4rkal_",
+        "website": "https://example.com",
+        "address": "",
+        "description": "I like potatos"
+      },
+      {
+        "name": "xmruser",
+        "github": "user",
+        "x": "4rkal_",
+        "website": "https://example.com",
+        "address": "",
+        "description": "I like potatos"
+      },
+      {
+        "name": "monerochan",
+        "github": "user",
+        "x": "4rkal_",
+        "website": "https://example.com",
+        "address": "",
+        "description": "I like potatos"
+      },
+    {
+      "name": "xmruser",
+      "github": "user",
+      "x": "4rkal_",
+      "website": "https://example.com",
+      "address": "",
+      "description": "I like potatos"
+    },
+    {
+      "name": "monerochan",
+      "github": "user",
+      "x": "4rkal_",
+      "website": "https://example.com",
+      "address": "",
+      "description": "I like potatos"
+    }
+    ]
+  }
+  
