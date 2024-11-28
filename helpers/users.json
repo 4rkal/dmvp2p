@@ -5,49 +5,18 @@
         "github": "4rkal",
         "x": "4rkal_",
         "website": "https://4rkal.com",
-        "address": "",
-        "description": "I like Monero monero"
+        "address": "425evPnXucaJcAvgYbcasrYJ5k1qUEB7gAB4DSS7nM73hcxMgf3L9fzQCRA441tZbAcSXhRR4DDxT5B3oxBKbnns9A5Z4mi",
+        "description": "Programmer, blogger, crypto user."
       },
       {
-        "name": "user",
-        "github": "user",
-        "x": "4rkal_",
-        "website": "https://example.com",
-        "address": "",
-        "description": "I like potatos"
-      },
-      {
-        "name": "xmruser",
-        "github": "user",
-        "x": "4rkal_",
-        "website": "https://example.com",
-        "address": "",
-        "description": "I like potatos"
-      },
-      {
-        "name": "monerochan",
-        "github": "user",
-        "x": "4rkal_",
-        "website": "https://example.com",
-        "address": "",
-        "description": "I like potatos"
-      },
-    {
-      "name": "xmruser",
-      "github": "user",
-      "x": "4rkal_",
-      "website": "https://example.com",
-      "address": "",
-      "description": "I like potatos"
-    },
-    {
-      "name": "monerochan",
-      "github": "user",
-      "x": "4rkal_",
-      "website": "https://example.com",
-      "address": "",
-      "description": "I like potatos"
-    }
+        "name": "Seth For Privacy",
+        "github": "sethforprivacy",
+        "x": "sethforprivacy",
+        "website": "https://sethforprivacy.com",
+        "address": "42uDZuVw13kSCf6BFFWanFcofAvCjMeatf3zzA6Gbms7UDgwB6rd6hLYAyP985YoyLdsa8NwhSgtH6dWadw7TeXiTHaMQS8",
+        "description": "Freedom maximalist, Privacy advocate"
+      }
+      
     ]
   }
   

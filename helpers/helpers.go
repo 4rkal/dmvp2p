@@ -2,10 +2,12 @@ package helpers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os/exec"
 
 	"fyne.io/fyne/v2"
 )
@@ -57,4 +59,39 @@ func ParseURL(urlStr string) *url.URL {
 		return nil
 	}
 	return u
+}
+
+func startP2Pool(host, address, path string) error {
+	cmd := exec.Command(path, "--host", host, "--wallet --mini", address)
+
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start p2pool: %w", err)
+	}
+
+	fmt.Println("p2pool started successfully.")
+	return nil
+}
+
+func startXmrig(path string) error {
+	cmd := exec.Command(path, "-o", "127.0.0.1:3333")
+
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start xmrig: %w", err)
+	}
+
+	fmt.Println("xmrig started successfully.")
+	return nil
+}
+
+func StartMining(host, address, xmrigpath, p2poolpath string) error {
+	err := startP2Pool(host, address, p2poolpath)
+	if err != nil {
+		return err
+	}
+
+	err2 := startXmrig(xmrigpath)
+	if err2 != nil {
+		return err2
+	}
+	return nil
 }
