@@ -16,13 +16,10 @@ sleep 1
 tar -czvf release/linux/dmvp2p-linux-amd64.tar.gz release/linux
 
 
-# SHA256sums + PGP
+# SHA256sums
 rm release/sums.txt
 rm release/sums.txt.asc
 sha256sum release/windows/dmvp2p-windows-amd64.zip | awk '{print $1 "  " "dmvp2p-windows-amd64.zip"}' >> release/sums.txt
 sha256sum release/linux/dmvp2p-linux-amd64.tar.gz | awk '{print $1 "  " "dmvp2p-linux-amd64.tar.gz"}' >> release/sums.txt
-
-
-gpg --armor --output release/sums.txt.asc --detach-sig release/sums.txt
 
 echo "done"
