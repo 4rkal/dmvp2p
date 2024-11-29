@@ -20,8 +20,18 @@ var users []helpers.User
 
 var settings pages.Settings
 
+var settings_found bool
+
 func init() {
 	users = helpers.LoadUsers()
+	var err error
+	settings, err = pages.LoadSettings()
+	if err != nil {
+		fmt.Println(err)
+		settings_found = false
+	} else {
+		settings_found = true
+	}
 }
 
 func createUserCard(user helpers.User) fyne.CanvasObject {
@@ -105,14 +115,6 @@ func filterUsers(searchTerm string) []helpers.User {
 	return filteredUsers
 }
 
-func init() {
-	var err error
-	settings, err = pages.LoadSettings()
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 func main() {
 	a := app.NewWithID("com.example.dmvp2p")
 	w := a.NewWindow("DMVP2P (Donate Monero Via P2Pool)")
@@ -166,6 +168,15 @@ func main() {
 
 	emtpy_line := widget.NewLabel("")
 
+	errors := canvas.NewText("", color.White)
+
+	if !settings_found {
+		fmt.Println("settings not found")
+		errors.Text = "Settings not found, please set the P2Pool/XMRig binary locations in the settings tab. Then restart"
+		errors.Color = color.RGBA{R: 255, G: 0, B: 0, A: 255}
+
+	}
+
 	p2pool_label := widget.NewLabel("P2Pool Path:")
 	infoLabel := widget.NewLabel("No file selected.")
 	if settings.P2poolPath != "" {
@@ -192,7 +203,7 @@ func main() {
 
 	scrollContainer.SetMinSize(fyne.NewSize(0, 700))
 
-	userContainer := container.NewVBox(text, text2, input, scrollContainer)
+	userContainer := container.NewVBox(errors, text, text2, input, scrollContainer)
 
 	tabs := container.NewAppTabs(
 		container.NewTabItemWithIcon("Home", theme.HomeIcon(), container.NewStack(userContainer)),
