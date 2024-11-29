@@ -16,7 +16,9 @@ You can also build the project from source by follow these steps:
 
 `cd dmvp2p`
 
-`
+`go mod tidy`
+
+`go run .` OR `go build .`
 
 ## How can I add myself to get donations?
 
