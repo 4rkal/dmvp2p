@@ -63,17 +63,33 @@ func createUserCard(user helpers.User) fyne.CanvasObject {
 	})
 	donateButton.Importance = widget.HighImportance
 
+	var socialLinks []fyne.CanvasObject
+
+	if user.GitHub != "" {
+		socialLinks = append(socialLinks, createHyperlink("GitHub", "https://github.com/"+user.GitHub))
+		socialLinks = append(socialLinks, widget.NewLabel("|"))
+	}
+
+	if user.X != "" {
+		socialLinks = append(socialLinks, createHyperlink("X", "https://x.com/"+user.X))
+		socialLinks = append(socialLinks, widget.NewLabel("|"))
+	}
+
+	if user.Website != "" {
+		socialLinks = append(socialLinks, createHyperlink("Website", user.Website))
+	}
+
+	if len(socialLinks) > 0 {
+		if label, ok := socialLinks[len(socialLinks)-1].(*widget.Label); ok && label.Text == "|" {
+			socialLinks = socialLinks[:len(socialLinks)-1]
+		}
+	}
+
 	return widget.NewCard(
 		user.Name,
 		user.Description,
 		container.NewVBox(
-			container.NewHBox(
-				createHyperlink("GitHub", "https://github.com/"+user.GitHub),
-				widget.NewLabel("|"),
-				createHyperlink("X", "https://x.com/"+user.X),
-				widget.NewLabel("|"),
-				createHyperlink("Website", user.Website),
-			),
+			container.NewHBox(socialLinks...),
 			donateButton,
 		),
 	)
