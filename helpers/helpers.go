@@ -10,6 +10,13 @@ import (
 	"os/exec"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/widget"
+	"github.com/sqweek/dialog"
+)
+
+var (
+	p2poolProcess *exec.Cmd
+	xmrigProcess  *exec.Cmd
 )
 
 type User struct {
@@ -62,9 +69,9 @@ func ParseURL(urlStr string) *url.URL {
 }
 
 func startP2Pool(host, address, path string) error {
-	cmd := exec.Command(path, "--host", host, "--wallet --mini", address)
+	p2poolProcess = exec.Command(path, "--host", host, "--wallet", address, "--mini")
 
-	if err := cmd.Start(); err != nil {
+	if err := p2poolProcess.Start(); err != nil {
 		return fmt.Errorf("failed to start p2pool: %w", err)
 	}
 
@@ -73,9 +80,9 @@ func startP2Pool(host, address, path string) error {
 }
 
 func startXmrig(path string) error {
-	cmd := exec.Command(path, "-o", "127.0.0.1:3333")
+	xmrigProcess = exec.Command(path, "-o", "127.0.0.1:3333")
 
-	if err := cmd.Start(); err != nil {
+	if err := xmrigProcess.Start(); err != nil {
 		return fmt.Errorf("failed to start xmrig: %w", err)
 	}
 
@@ -94,4 +101,35 @@ func StartMining(host, address, xmrigpath, p2poolpath string) error {
 		return err2
 	}
 	return nil
+}
+
+func StopMining() error {
+	if p2poolProcess != nil && p2poolProcess.Process != nil {
+		if err := p2poolProcess.Process.Kill(); err != nil {
+			return fmt.Errorf("failed to stop p2pool: %w", err)
+		}
+		fmt.Println("p2pool stopped successfully.")
+	}
+
+	if xmrigProcess != nil && xmrigProcess.Process != nil {
+		if err := xmrigProcess.Process.Kill(); err != nil {
+			return fmt.Errorf("failed to stop xmrig: %w", err)
+		}
+		fmt.Println("xmrig stopped successfully.")
+	}
+
+	return nil
+}
+
+func SelectFileWithDialog(label *widget.Label, settingsPath *string) {
+	selectedPath, err := dialog.File().Title("Select File").Load()
+	if err != nil {
+		if err.Error() != "canceled" {
+			fmt.Println("Error selecting file:", err)
+		}
+		return
+	}
+
+	*settingsPath = selectedPath
+	label.SetText("Selected file: " + *settingsPath)
 }

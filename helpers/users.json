@@ -15,6 +15,24 @@
         "website": "https://sethforprivacy.com",
         "address": "42uDZuVw13kSCf6BFFWanFcofAvCjMeatf3zzA6Gbms7UDgwB6rd6hLYAyP985YoyLdsa8NwhSgtH6dWadw7TeXiTHaMQS8",
         "description": "Freedom maximalist, Privacy advocate"
+      },
+
+      {
+        "name": "Haveno",
+        "github": "haveno-dex",
+        "x": "HavenoDEX",
+        "website": "https://haveno.exchange/",
+        "address": "42sjokkT9FmiWPqVzrWPFE5NCJXwt96bkBozHf4vgLR9hXyJDqKHEHKVscAARuD7in5wV1meEcSTJTanCTDzidTe2cFXS1F",
+        "description": "Decentralized P2P platform for trading XMR for fiat and cryptocurrencies"
+      },
+
+      {
+        "name": "MoneroTalk",
+        "github": "",
+        "x": "MoneroTalk",
+        "website": "https://www.monerotalk.live/",
+        "address": "47e6GvjL4in5Zy5vVHMb9PQtGXQAcFvWSCQn2fuwDYZoZRk3oFjefr51WBNDGG9EjF1YDavg7pwGDFSAVWC5K42CBcLLv5U",
+        "description": "Monero Talk broadcasts weekly conversations w/ topical guests to understand what the Monero cryptocurrency is today & what it hopes to become"
       }
       
     ]

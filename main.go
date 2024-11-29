@@ -10,7 +10,6 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"github.com/4rkal/dmvp2p/helpers"
@@ -35,13 +34,34 @@ func createUserCard(user helpers.User) fyne.CanvasObject {
 		return widget.NewHyperlink(label, parsedURL)
 	}
 
-	donateButton := widget.NewButton("Start Donating", func() {
-		fmt.Println("donating to: ", user.Name)
-		err := helpers.StartMining("p2pmd.xmrvsbeast.com", user.Address, settings.XmrigPath, settings.P2poolPath)
-		if err != nil {
-			fmt.Println(err)
+	mining := false
+
+	var donateButton *widget.Button
+
+	donateButton = widget.NewButton("Start Donating", func() {
+		if !mining {
+			fmt.Println("Starting mining for:", user.Name)
+			err := helpers.StartMining("p2pmd.xmrvsbeast.com", user.Address, settings.XmrigPath, settings.P2poolPath)
+			if err != nil {
+				fmt.Println("Error starting mining:", err)
+				return
+			}
+			donateButton.SetText("Stop Donating")
+			donateButton.Importance = widget.DangerImportance
+			mining = true
+		} else {
+			fmt.Println("Stopping mining for:", user.Name)
+			err := helpers.StopMining()
+			if err != nil {
+				fmt.Println("Error stopping mining:", err)
+				return
+			}
+			donateButton.SetText("Start Donating")
+			donateButton.Importance = widget.HighImportance
+			mining = false
 		}
 	})
+	donateButton.Importance = widget.HighImportance
 
 	return widget.NewCard(
 		user.Name,
@@ -131,60 +151,23 @@ func main() {
 	emtpy_line := widget.NewLabel("")
 
 	p2pool_label := widget.NewLabel("P2Pool Path:")
-
 	infoLabel := widget.NewLabel("No file selected.")
-
 	if settings.P2poolPath != "" {
 		infoLabel.SetText("Selected file: " + settings.P2poolPath)
-
 	}
 
 	selectFileButton := widget.NewButton("Select File", func() {
-		// Open a file dialog
-		dialog.NewFileOpen(func(file fyne.URIReadCloser, err error) {
-			if err != nil {
-				// Handle errors (e.g., file dialog was cancelled)
-				return
-			}
-			if file == nil {
-				// User cancelled the dialog
-				return
-			}
-			// Save the selected file path
-			settings.P2poolPath = file.URI().Path()
-			file.Close() // Close the file handle
-
-			// Show the selected file path in the app (optional)
-			infoLabel.SetText("Selected file: " + settings.P2poolPath)
-		}, w).Show()
+		helpers.SelectFileWithDialog(infoLabel, &settings.P2poolPath)
 	})
 
 	xmrig_label := widget.NewLabel("XMRig Path:")
-
 	infoLabel2 := widget.NewLabel("No file selected.")
 	if settings.XmrigPath != "" {
 		infoLabel2.SetText("Selected file: " + settings.XmrigPath)
-
 	}
 
 	selectFileButton2 := widget.NewButton("Select File", func() {
-		// Open a file dialog
-		dialog.NewFileOpen(func(file fyne.URIReadCloser, err error) {
-			if err != nil {
-				// Handle errors (e.g., file dialog was cancelled)
-				return
-			}
-			if file == nil {
-				// User cancelled the dialog
-				return
-			}
-			// Save the selected file path
-			settings.XmrigPath = file.URI().Path()
-			file.Close() // Close the file handle
-
-			// Show the selected file path in the app (optional)
-			infoLabel2.SetText("Selected file: " + settings.XmrigPath)
-		}, w).Show()
+		helpers.SelectFileWithDialog(infoLabel2, &settings.XmrigPath)
 	})
 
 	saveSettings := widget.NewButton("Save Settings", func() {
