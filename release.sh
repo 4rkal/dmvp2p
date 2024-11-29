@@ -22,4 +22,7 @@ rm release/sums.txt.asc
 sha256sum release/windows/dmvp2p-windows-amd64.zip | awk '{print $1 "  " "dmvp2p-windows-amd64.zip"}' >> release/sums.txt
 sha256sum release/linux/dmvp2p-linux-amd64.tar.gz | awk '{print $1 "  " "dmvp2p-linux-amd64.tar.gz"}' >> release/sums.txt
 
+cat release/sums.txt | gpg --armor --clearsign >> release/sums.txt.asc
+
+
 echo "done"
