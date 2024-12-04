@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"net/url"
 	"strings"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -183,6 +184,23 @@ func main() {
 		infoLabel.SetText("Selected file: " + settings.P2poolPath)
 	}
 
+	hashrate_label := canvas.NewText("No hashrate detected", color.White)
+	hashrate_label.TextSize = 20
+	hashrate_label.Alignment = fyne.TextAlignCenter
+
+	ticker := time.NewTicker(2 * time.Second)
+	defer ticker.Stop()
+	go func() {
+		for range ticker.C {
+			stats := helpers.GetXmrigStats()
+			if stats.Highest != 0 && stats.Total != nil {
+				hashrate_label.Text = fmt.Sprintf("%v h/s | Max %v h/s", stats.Total[0], stats.Highest)
+
+			}
+
+		}
+	}()
+
 	selectFileButton := widget.NewButton("Select File", func() {
 		helpers.SelectFileWithDialog(infoLabel, &settings.P2poolPath)
 	})
@@ -207,7 +225,7 @@ func main() {
 
 	tabs := container.NewAppTabs(
 		container.NewTabItemWithIcon("Home", theme.HomeIcon(), container.NewStack(userContainer)),
-		container.NewTabItemWithIcon("Mining", theme.BrokenImageIcon(), container.NewVBox(text3)),
+		container.NewTabItemWithIcon("Mining", theme.BrokenImageIcon(), container.NewVBox(text3, emtpy_line, hashrate_label)),
 		container.NewTabItemWithIcon("Settings", theme.SettingsIcon(), container.NewVBox(text4, fullScreenButton, emtpy_line, p2pool_label, infoLabel, selectFileButton, xmrig_label, infoLabel2, selectFileButton2, emtpy_line, saveSettings)),
 	)
 

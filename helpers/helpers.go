@@ -19,6 +19,15 @@ var (
 	xmrigProcess  *exec.Cmd
 )
 
+type Hashrate struct {
+	Total   []float64 `json:"total"`
+	Highest float64   `json:"highest"`
+}
+
+type SummaryResponse struct {
+	Hashrate Hashrate `json:"hashrate"`
+}
+
 type User struct {
 	Name        string `json:"name"`
 	GitHub      string `json:"github"`
@@ -80,7 +89,13 @@ func startP2Pool(host, address, path string) error {
 }
 
 func startXmrig(path string) error {
-	xmrigProcess = exec.Command(path, "-o", "127.0.0.1:3333")
+	xmrigProcess = exec.Command(path,
+		"-o", "127.0.0.1:3333",
+		"--http-host=127.0.0.1",
+		"--http-port=9999",
+		"--http-access-token=dmvp2p",
+		"--api-worker-id=1",
+		"--api-id=1")
 
 	if err := xmrigProcess.Start(); err != nil {
 		return fmt.Errorf("failed to start xmrig: %w", err)
@@ -132,4 +147,57 @@ func SelectFileWithDialog(label *widget.Label, settingsPath *string) {
 
 	*settingsPath = selectedPath
 	label.SetText("Selected file: " + *settingsPath)
+}
+
+func GetXmrigStats() Hashrate {
+	url := "http://127.0.0.1:9999/1/summary"
+	token := "dmvp2p"
+
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		fmt.Printf("Error creating request: %v\n", err)
+		return Hashrate{}
+	}
+
+	req.Header.Add("Authorization", "Bearer "+token)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		fmt.Printf("Error making request: %v\n", err)
+		return Hashrate{}
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("Received non-OK HTTP status: %s\n", resp.Status)
+		return Hashrate{}
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("Error reading response body: %v\n", err)
+		return Hashrate{}
+	}
+
+	var summary SummaryResponse
+	err = json.Unmarshal(body, &summary)
+	if err != nil {
+		fmt.Printf("Error parsing JSON response: %v\n", err)
+		return Hashrate{}
+	}
+
+	totalHashrate := 0.0
+	if len(summary.Hashrate.Total) > 0 {
+		totalHashrate = summary.Hashrate.Total[0]
+	}
+
+	fmt.Printf("Total Hashrate: %.2f H/s\n", totalHashrate)
+	fmt.Printf("Highest Hashrate: %.2f H/s\n", summary.Hashrate.Highest)
+
+	return Hashrate{
+		Total:   []float64{totalHashrate},
+		Highest: summary.Hashrate.Highest,
+	}
 }
